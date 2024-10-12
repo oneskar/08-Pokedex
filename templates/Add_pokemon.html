@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Pokemon</title>
+</head>
+<body>
+    <h1>Agregar nuevo pokemon</h1>
+    <form method="POST" action="{{url_for('create_account')}}"
+        <label for="entry">Numero del Pokemon:</label>
+        <input type="number"  name="entry" id="entry" required/>
+        <br/>
+
+        <label for="name">Nombre del Pokemon</label>
+        <input type="text" name="name" id="name" required/>
+        <br/>
+
+        <label for="type">Tipo del Pokemon</label>
+        <input type="text" name="type" id="type" required/>
+        <br/>
+
+        <label for="Nivel">Nivel del Pokemon:</label>
+        <input type="number"  name="Nivel" id="Nivel" required/>
+        <br/>
+       
+        <button type="submit">Agregar Pokemon</button>
+    
+    </form>
+    <a href="{{url_for('index')}}">Volver al menú principal</a>
+</body>
+</html>

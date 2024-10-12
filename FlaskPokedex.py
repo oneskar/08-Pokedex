@@ -13,71 +13,50 @@ app.secret_key='supersecretkey'
 
 
 #Modelo Pokemon
-class pokemon:
+class Pokemon:
     def __init__(self,entry:int, name:str, types: list,level:int):
         self.entry = entry
         self.name = name
         self.types = types
         self.level = level
         
+
     
-    def searchPokemon(list_pokemon,name_pokemon):        
-        for pokemon in list_pokemon:
-            if pokemon.name == name_pokemon:
-                return pokemon
-        return 
+ #Modelo Pokemons
+class Pokemons:
+    def __init__(self):
+        self.pokemons = {}   
     
-    def ShowPokemons(list_pokemon):
-        for i in list_pokemon:
-            print(f"Nombre {i.name}\nTipo {i.types}\nNivel {i.level}")
-        return
-    
-    def AddPokemon(nuevo_pok,list_pokemon):        
-        list_pokemon.append(nuevo_pok)
-        print(f"{nuevo_pok.name} Agregado")
-        return
-    
-    def EvolutionPokemons(list_pokemon):
-        for p in list_pokemon:
-            org = p.name
-            if p.entry == 1 and p.level >= 16:
-                p.entry = 2
-                p.name = "Ivysaur"
-                print(f"{org} Evoluciono a {p.name}")                
-            if p.entry == 2 and p.level >= 34:
-                p.entry = 3
-                p.name = "Venusaur"    
-                print(f"{org} Evoluciono a {p.name}")
-            if p.entry == 4 and p.level >= 16:
-                p.entry = 5
-                p.name = "Charmeleon"
-                print(f"{org} Evoluciono a {p.name}")
-            if p.entry == 5 and p.level >= 36:
-                p.entry = 6
-                p.name = "Charizard"
-                print(f"{org} Evoluciono a {p.name}")            
-            if p.entry == 7 and p.level >= 16:
-                p.entry = 8
-                p.name = "Wartortle"
-                print(f"{org} Evoluciono a {p.name}")
-            if p.entry == 8 and p.level >= 36:
-                p.entry = 9
-                p.name = "Blastoise"
-                print(f"{org} Evoluciono a {p.name}")
-        return 
-    
-    
+    def Add_pokemon(self, entry, name, types,level):
+        if entry in self.pokemons:
+            flash("El pokemon ya Existe")
+        else:
+            self.pokemons[entry] = Pokemon(entry, name, types,level)
+            flash(f"Pokemon agregado con el nombre {name}")
         
    
-#Para evolucionar modifique los valores del nivel   
-pokemones = [pokemon(1,"Bulbasaur",["Grass","Posion"],12),
-            pokemon(4,"Charmander",["Fire"],22),
-            pokemon(7,"Squirtle",["Water"],38)
-            ]
 
+pokemones = Pokemons()
 @app.route('/')
 def index():
     return render_template('inicio.html')
 
-if __name__ == '__main__':
+
+@app.route('/Add_pokemon', methods= ['GET', 'POST'])
+def Add_pokemon():
+    if request.method == 'POST':
+        entry= request.form['entry']
+        pokemon= request.form['name_pokemon']
+        tipo= request.form['name_pokemon']
+        level= int(request.form['level'])
+        
+        if pokemon in pokemones.pokemons:
+            flash(f"El pokemon Ya Existe")
+        else:
+            pokemones.Add_pokemon(entry,pokemon,tipo,level)
+        return redirect(url_for('index'))
+    return render_template('Add_pokemon.html')
+
+if __name__=="__main__":
     app.run(debug=True)
+
