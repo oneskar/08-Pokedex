@@ -20,6 +20,14 @@ class Pokemon:
         self.types = types
         self.level = level
         
+    def Search(self):        
+        return (f"{self.name}, es tipo {self.types} y esta a nivel {self.level}.")
+    
+    def Show(self):        
+        return self
+        #return (f"Numero: {self.entry}\nPokemon: {self.name}\nTipo: {self.types}\nNivel: {self.level}\n******\n")
+        #return  self.entry,self.name,self.types,self.level
+        
 
     
  #Modelo Pokemons
@@ -27,12 +35,12 @@ class Pokemons:
     def __init__(self):
         self.pokemons = {}   
     
-    def Add_pokemon(self, entry, name, types,level):
+    def Add(self, entry, name, types,level):
         if entry in self.pokemons:
             flash("El pokemon ya Existe")
         else:
             self.pokemons[entry] = Pokemon(entry, name, types,level)
-            flash(f"Pokemon agregado con el nombre {name}")
+            flash(f"{name} ha sido agregado al Pokedex")
         
    
 
@@ -42,21 +50,51 @@ def index():
     return render_template('inicio.html')
 
 
-@app.route('/Add_pokemon', methods= ['GET', 'POST'])
-def Add_pokemon():
+@app.route('/Add', methods= ['GET', 'POST'])
+def Add():
     if request.method == 'POST':
-        entry= request.form['entry']
-        pokemon= request.form['name_pokemon']
-        tipo= request.form['name_pokemon']
-        level= int(request.form['level'])
+        numero= request.form['entry']
+        pokemon= request.form['name']
+        tipo= request.form['types']
+        nivel= int(request.form['level'])
         
         if pokemon in pokemones.pokemons:
             flash(f"El pokemon Ya Existe")
         else:
-            pokemones.Add_pokemon(entry,pokemon,tipo,level)
+            pokemones.Add(numero,pokemon,tipo,nivel)
         return redirect(url_for('index'))
-    return render_template('Add_pokemon.html')
+    return render_template('Add.html')
+
+
+@app.route('/Search', methods=['GET', 'POST'])
+def Search():
+    if request.method == 'POST':
+        Numero = request.form['entry']
+        if Numero in pokemones.pokemons:
+            name = pokemones.pokemons[Numero].Search()            
+            flash(f"El #{Numero} corresponde al pokemon>> {name}")
+        else:
+            flash("El pokemon no ha sido Ingresado")
+        return redirect(url_for('index'))
+    return render_template('Search.html')
+
+
+@app.route('/Show', methods=['GET', 'POST'])
+def Show():
+    for pkm in pokemones.pokemons:            
+        descripcion = pokemones.pokemons[pkm].Show()           
+        #flash(f"{descripcion}")          
+        
+        flash(f"Numero: {descripcion.entry}\n")
+        flash(f"Pokemon: {descripcion.name}\n")
+        flash(f"Tipo: {descripcion.types}\n")
+        flash(f"Nivel: {descripcion.level}\n")
+        flash("********\n")
+    return redirect(url_for('index'))
+
+
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run ('0.0.0.0', 5000, debug=True)
+    #app.run (debug=True)
 
